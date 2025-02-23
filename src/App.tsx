@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Calendar, CheckSquare, Plus, X } from 'lucide-react';
 
 interface Habit {
@@ -36,7 +36,6 @@ function App() {
 
   const [newHabit, setNewHabit] = useState('');
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [highlight, setHighlight] = useState('');
 
   // Save habits to localStorage whenever they change
   useEffect(() => {
@@ -64,8 +63,8 @@ function App() {
         const newCompletedHabits = existingRecord.completedHabits.includes(habitId)
           ? existingRecord.completedHabits.filter(id => id !== habitId)
           : [...existingRecord.completedHabits, habitId];
-        return prev.map(r => 
-          r.date === dateStr 
+        return prev.map(r =>
+          r.date === dateStr
             ? { ...r, completedHabits: newCompletedHabits }
             : r
         );
@@ -90,22 +89,19 @@ function App() {
     })));
   };
 
-  const addHighlight = (day: number) => {
-    if (highlight.trim()) {
-      const dateStr = formatDate(day);
-      setRecords(prev => {
-        const existingRecord = prev.find(r => r.date === dateStr);
-        if (existingRecord) {
-          return prev.map(r => 
-            r.date === dateStr 
-              ? { ...r, highlight: highlight.trim() }
-              : r
-          );
-        }
-        return [...prev, { date: dateStr, completedHabits: [], highlight: highlight.trim() }];
-      });
-      setHighlight('');
-    }
+  const updateHighlight = (day: number, highlight: string) => {
+    const dateStr = formatDate(day);
+    setRecords(prev => {
+      const existingRecord = prev.find(r => r.date === dateStr);
+      if (existingRecord) {
+        return prev.map(r =>
+          r.date === dateStr
+            ? { ...r, highlight: highlight.trim() }
+            : r
+        );
+      }
+      return [...prev, { date: dateStr, completedHabits: [], highlight: highlight.trim() }];
+    });
   };
 
   const getRecord = (day: number) => {
@@ -198,10 +194,7 @@ function App() {
                       <input
                         type="text"
                         value={getRecord(day)?.highlight || ''}
-                        onChange={(e) => {
-                          setHighlight(e.target.value);
-                          addHighlight(day);
-                        }}
+                        onChange={(e) => updateHighlight(day, e.target.value)}
                         placeholder="Add highlight..."
                         className="w-full px-2 py-1 border rounded"
                       />
