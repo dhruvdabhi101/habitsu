@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calendar, CheckSquare, Plus, X } from 'lucide-react';
 
 interface Habit {
@@ -96,11 +96,11 @@ function App() {
       if (existingRecord) {
         return prev.map(r =>
           r.date === dateStr
-            ? { ...r, highlight: highlight.trim() }
+            ? { ...r, highlight }
             : r
         );
       }
-      return [...prev, { date: dateStr, completedHabits: [], highlight: highlight.trim() }];
+      return [...prev, { date: dateStr, completedHabits: [], highlight }];
     });
   };
 
